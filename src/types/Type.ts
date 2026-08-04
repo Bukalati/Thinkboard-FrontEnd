@@ -1,3 +1,5 @@
+export type NoteInput = Pick<Note, "title" | "content">;
+
 export interface ResponseAllNotes {
   success: boolean;
   response: Note[];
@@ -38,7 +40,7 @@ export interface NoteGridProps {
 
 export interface NoteFormProps {
   editingNote: Note | null;
-  onAdd: (note: Omit<Note, "id">) => void;
-  onUpdate: (id: string, note: Omit<Note, "id">) => void;
+  onAdd: (note: NoteInput) => void;
+  onUpdate: (id: string, note: NoteInput) => void;
   onCancelEdit: () => void;
 }
