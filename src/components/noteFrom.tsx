@@ -20,6 +20,7 @@ export default function NoteForm({
     }
   }, [editingNote]);
 
+  //! ___ change it ________________________
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!title.trim()) return;
