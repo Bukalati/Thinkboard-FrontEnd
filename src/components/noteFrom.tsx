@@ -1,13 +1,24 @@
-import { useState, type FormEvent } from "react";
-import type { Note } from "../types/Type";
+import { useEffect, useState, type FormEvent } from "react";
+import type { NoteFormProps } from "../types/Type";
 
-interface NoteFormProps {
-  onAdd: (note: Omit<Note, "id">) => void;
-}
-
-export default function NoteForm({ onAdd }: NoteFormProps) {
+export default function NoteForm({
+  editingNote,
+  onAdd,
+  onUpdate,
+  onCancelEdit,
+}: NoteFormProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (editingNote) {
+      setTitle(editingNote.title);
+      setContent(editingNote.content);
+    } else {
+      setTitle("");
+      setContent("");
+    }
+  }, [editingNote]);
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -40,8 +51,17 @@ export default function NoteForm({ onAdd }: NoteFormProps) {
         type="submit"
         className="bg-accent text-white rounded-md py-2 font-medium hover:bg-accent-hover transition-colors"
       >
-        افزودن یادداشت
+        {editingNote ? "افزودن یادداشت" : "ذخیره تغییرات"}
       </button>
+      {editingNote && (
+        <button
+          type="button"
+          onClick={onCancelEdit}
+          className="rounded-md py-2 px-4 font-medium text-ink-soft hover:bg-bg transition-colors"
+        >
+          انصراف
+        </button>
+      )}
     </form>
   );
 }

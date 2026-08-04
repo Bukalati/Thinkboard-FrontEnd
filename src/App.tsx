@@ -10,17 +10,38 @@ const initialNotes: Note[] = [
 ];
 export default function App() {
   const [notes, setNotes] = useState<Note[]>(initialNotes);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
 
   function handleAddNote(newNote: Omit<Note, "id">) {
     const note: Note = { ...newNote, id: crypto.randomUUID() };
     setNotes((newSet) => [note, ...newSet]);
   }
 
+  function handleDeleteEvents(id: string) {
+    setNotes((newSet) => newSet.filter((note) => note.id !== id));
+  }
+
+  function handleUpdateNote(id: string, updated: Omit<Note, "id">) {
+    setNotes((prev) =>
+      prev.map((note) => (note.id === id ? { ...note, ...updated } : note)),
+    );
+    setEditingNote(null);
+  }
+
   return (
     <div className="min-h-screen bg-bg p-6">
       <h1 className="text-2xl font-bold text-ink mb-6">Think Board</h1>
-      <NoteForm onAdd={handleAddNote} />
-      <NoteGrid notes={notes} />
+      <NoteForm
+        editingNote={editingNote}
+        onAdd={handleAddNote}
+        onUpdate={handleUpdateNote}
+        onCancelEdit={() => setEditingNote(null)}
+      />
+      <NoteGrid
+        notes={notes}
+        onDelete={handleDeleteEvents}
+        onEdit={setEditingNote}
+      />
     </div>
   );
 }
