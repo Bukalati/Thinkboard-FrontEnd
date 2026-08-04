@@ -1,15 +1,15 @@
 import { useState } from "react";
 import "./App.css";
-import type { Note, ResponseAllNotes } from "./types/Type";
+import type { Note } from "./types/Type";
 import NoteGrid from "./components/noteGrid";
 import NoteForm from "./components/noteFrom";
-import { useGetAllNotes } from "./hooks/useGetNote";
-import useDeleteNote from "./hooks/useDeleteNote";
+import { useGetAllNotes } from "./share/hooks/useGetNote";
+import useDeleteNote from "./share/hooks/useDeleteNote";
 
 export default function App() {
-  const notes = useGetAllNotes();
+  const {notes , refetch} = useGetAllNotes();
   const [editingNote, setEditingNote] = useState<Note | null>(null);
-  const fnd = useDeleteNote();
+  const deleteNote = useDeleteNote();
   function handleAddNote(note: Omit<Note, "id">): void {
     throw new Error("Function not implemented.");
   }
@@ -19,7 +19,7 @@ export default function App() {
   }
 
   function handleDeleteNote(id: string) {
-    fnd(id);
+    deleteNote(id , refetch);
   }
   return (
     <div className="min-h-screen bg-bg p-6">
