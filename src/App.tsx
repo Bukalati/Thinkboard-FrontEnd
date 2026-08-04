@@ -16,11 +16,15 @@ export default function App() {
     setNotes((newSet) => [note, ...newSet]);
   }
 
+  function haadleDeleteEvents(id: string) {
+    setNotes((newSet) => newSet.filter((note) => note.id !== id));
+  }
+
   return (
     <div className="min-h-screen bg-bg p-6">
       <h1 className="text-2xl font-bold text-ink mb-6">Think Board</h1>
       <NoteForm onAdd={handleAddNote} />
-      <NoteGrid notes={notes} />
+      <NoteGrid notes={notes} onDelete={haadleDeleteEvents} />
     </div>
   );
 }

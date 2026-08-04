@@ -6,8 +6,10 @@ export interface Note {
 
 export interface NoteCardProps {
   note: Note;
+  onDelete: (id: string) => void;
 }
 
 export interface NoteGridProps {
   notes: Note[];
+  onDelete: (id: string) => void;
 }
