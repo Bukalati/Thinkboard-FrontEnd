@@ -1,7 +1,27 @@
+export interface ResponseAllNotes {
+  success: boolean;
+  response: Note[];
+  status: number;
+}
+
+export interface ResponseDeleteNote {
+  success: boolean;
+  response: string;
+  status: number;
+}
+
+export interface ResponseNote {
+  success: boolean;
+  response: Note;
+  status: number;
+}
+
 export interface Note {
   id: string;
   title: string;
   content: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface NoteCardProps {
