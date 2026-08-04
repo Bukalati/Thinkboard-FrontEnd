@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import type { NoteFormProps } from "../types/Type";
 
 export default function NoteForm({
@@ -24,7 +24,12 @@ export default function NoteForm({
     e.preventDefault();
     if (!title.trim()) return;
 
-    onAdd({ title, content });
+    if (editingNote) {
+      onUpdate(editingNote.id, { title, content });
+    } else {
+      onAdd({ title, content });
+    }
+
     setTitle("");
     setContent("");
   }
@@ -47,21 +52,23 @@ export default function NoteForm({
         rows={3}
         className="border border-border rounded-md px-3 py-2 text-ink outline-none focus:border-accent"
       />
-      <button
-        type="submit"
-        className="bg-accent text-white rounded-md py-2 font-medium hover:bg-accent-hover transition-colors"
-      >
-        {editingNote ? "افزودن یادداشت" : "ذخیره تغییرات"}
-      </button>
-      {editingNote && (
+      <div className="flex gap-2">
         <button
-          type="button"
-          onClick={onCancelEdit}
-          className="rounded-md py-2 px-4 font-medium text-ink-soft hover:bg-bg transition-colors"
+          type="submit"
+          className="bg-accent text-white rounded-md py-2 px-4 font-medium hover:bg-accent-hover transition-colors"
         >
-          انصراف
+          {editingNote ? "ذخیره تغییرات" : "افزودن یادداشت"}
         </button>
-      )}
+        {editingNote && (
+          <button
+            type="button"
+            onClick={onCancelEdit}
+            className="rounded-md py-2 px-4 font-medium text-ink-soft hover:bg-bg transition-colors"
+          >
+            انصراف
+          </button>
+        )}
+      </div>
     </form>
   );
 }

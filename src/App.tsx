@@ -8,17 +8,14 @@ const initialNotes: Note[] = [
   { id: "1", title: "Learn React", content: "Today I learned useState" },
   { id: "2", title: "Shopping", content: "Milk, eggs, bread" },
 ];
+
 export default function App() {
   const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
 
   function handleAddNote(newNote: Omit<Note, "id">) {
     const note: Note = { ...newNote, id: crypto.randomUUID() };
-    setNotes((newSet) => [note, ...newSet]);
-  }
-
-  function handleDeleteEvents(id: string) {
-    setNotes((newSet) => newSet.filter((note) => note.id !== id));
+    setNotes((prev) => [note, ...prev]);
   }
 
   function handleUpdateNote(id: string, updated: Omit<Note, "id">) {
@@ -26,6 +23,10 @@ export default function App() {
       prev.map((note) => (note.id === id ? { ...note, ...updated } : note)),
     );
     setEditingNote(null);
+  }
+
+  function handleDeleteNote(id: string) {
+    setNotes((prev) => prev.filter((note) => note.id !== id));
   }
 
   return (
@@ -39,7 +40,7 @@ export default function App() {
       />
       <NoteGrid
         notes={notes}
-        onDelete={handleDeleteEvents}
+        onDelete={handleDeleteNote}
         onEdit={setEditingNote}
       />
     </div>

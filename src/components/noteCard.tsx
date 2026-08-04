@@ -5,18 +5,14 @@ export default function NoteCard({ note, onDelete, onEdit }: NoteCardProps) {
     <div className="bg-surface border border-border rounded-lg p-4">
       <h2 className="font-semibold text-ink">{note.title}</h2>
       <p className="text-sm text-ink-soft mt-1">{note.content}</p>
-      <button
-        onClick={() => onEdit(note)}
-        className="text-accent hover:underline"
-      >
-        ویرایش
-      </button>
-      <button
-        onClick={() => onDelete(note.id)}
-        className="mt-3 text-sm text-danger hover:underline"
-      >
-        حذف
-      </button>
+      <div className="flex gap-3 mt-3 text-sm">
+        <button onClick={() => onEdit(note)} className="text-accent hover:underline">
+          ویرایش
+        </button>
+        <button onClick={() => onDelete(note.id)} className="text-danger hover:underline">
+          حذف
+        </button>
+      </div>
     </div>
   );
 }
