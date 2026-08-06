@@ -69,21 +69,25 @@ export default function NoteDetailPage() {
       </Header>
 
       <div className="p-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-accent mb-4 text-sm"
-        >
-          بازگشت
-        </button>
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={() => navigate(-1)}
+            className="text-accent mb-4 text-sm"
+          >
+            بازگشت
+          </button>
 
-        {isLoading && <p className="text-ink-soft">در حال بارگذاری...</p>}
-        {error && <p className="text-danger">{error}</p>}
-        {note && (
-          <div className="bg-surface border border-border rounded-lg p-6 max-w-2xl">
-            <h1 className="text-xl font-bold text-ink mb-3">{note.title}</h1>
-            <p className="text-ink-soft whitespace-pre-wrap">{note.content}</p>
-          </div>
-        )}
+          {isLoading && <p className="text-ink-soft">در حال بارگذاری...</p>}
+          {error && <p className="text-danger">{error}</p>}
+          {note && (
+            <div className="bg-surface border border-border rounded-lg p-6">
+              <h1 className="text-xl font-bold text-ink mb-3">{note.title}</h1>
+              <p className="text-ink-soft whitespace-pre-wrap">
+                {note.content}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       <Modal isOpen={isFormOpen} onClose={() => setIsFormOpen(false)}>
