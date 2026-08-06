@@ -10,7 +10,7 @@ import Modal from "./components/modal";
 import NoteForm from "./components/noteFrom";
 import ConfirmDialog from "./components/confirmDialog";
 import Toast from "./components/toast";
-
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function NoteDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -50,18 +50,29 @@ export default function NoteDetailPage() {
       <Header>
         {note && (
           <>
-            <button onClick={() => setIsFormOpen(true)} className="text-accent hover:underline text-sm">
-              ویرایش
+            <button
+              onClick={() => setIsFormOpen(true)}
+              aria-label="ویرایش"
+              className="p-2 rounded-md text-ink-soft hover:bg-accent/10 hover:text-accent transition-colors"
+            >
+              <Pencil size={18} />
             </button>
-            <button onClick={() => setIsConfirmOpen(true)} className="text-danger hover:underline text-sm">
-              حذف
+            <button
+              onClick={() => setIsConfirmOpen(true)}
+              aria-label="حذف"
+              className="p-2 rounded-md text-ink-soft hover:bg-danger/10 hover:text-danger transition-colors"
+            >
+              <Trash2 size={18} />
             </button>
           </>
         )}
       </Header>
 
       <div className="p-6">
-        <button onClick={() => navigate(-1)} className="text-accent mb-4 text-sm">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-accent mb-4 text-sm"
+        >
           بازگشت
         </button>
 
@@ -91,7 +102,9 @@ export default function NoteDetailPage() {
         onCancel={() => setIsConfirmOpen(false)}
       />
 
-      {toast && <Toast message={toast.message} type={toast.type} onDone={clearToast} />}
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onDone={clearToast} />
+      )}
     </div>
   );
 }
