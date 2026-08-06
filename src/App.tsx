@@ -1,11 +1,12 @@
-import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./homepage";
+import NoteDetailPage from "./notedetailpage";
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-ink">Think Board</h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/notes/:id" element={<NoteDetailPage />} />
+    </Routes>
   );
 }
-
-export default App;
