@@ -1,4 +1,6 @@
-const BASE_URL = "https://thinkboard.codewithmmd.ir/api";
+const BASE_URL = import.meta.env.DEV
+  ? "https://thinkboard.codewithmmd.ir/api"
+  : "/api";
 
 export const request = async <T>(
   url: string,
