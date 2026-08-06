@@ -39,21 +39,22 @@ export function useGetNote(id: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchNote() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await request<ResponseNote>(`/notes/${id}`);
-        setNote(data.response);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "unknown error");
-      } finally {
-        setIsLoading(false);
-      }
+  async function fetchNote() {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await request<ResponseNote>(`/notes/${id}`);
+      setNote(data.response);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "خطای ناشناخته");
+    } finally {
+      setIsLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchNote();
   }, [id]);
 
-  return { note, isLoading, error };
+  return { note, isLoading, error, refetch: fetchNote };
 }
