@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useDeleteNote from "./share/hooks/useDeleteNote";
 import useAddNote from "./share/hooks/useAddNote";
 import useUpdateNote from "./share/hooks/useUpdateNote";
@@ -11,18 +11,45 @@ import Modal from "./components/modal";
 import NoteForm from "./components/noteFrom";
 import ConfirmDialog from "./components/confirmDialog";
 import Toast from "./components/toast";
-
+import type { SortOption } from "./sortselect";
+import SearchInput from "./searchInput";
+import SortSelect from "./sortselect";
 
 export default function HomePage() {
   const { notes, isloading, error, refetch } = useGetAllNotes();
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [noteIdToDelete, setNoteIdToDelete] = useState<string | null>(null);
-
+  const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
   const deleteNote = useDeleteNote();
   const addNote = useAddNote();
   const updateNote = useUpdateNote();
   const { toast, showToast, clearToast } = useToast();
+
+  const filteredNotes = useMemo(() => {
+    const q = query.trim().toLowerCase();
+
+    let result = notes.filter(
+      (note) =>
+        note.title.toLowerCase().includes(q) ||
+        note.content.toLowerCase().includes(q),
+    );
+
+    if (sortBy === "newest") {
+      result = [...result].sort(
+        (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
+      );
+    } else if (sortBy === "oldest") {
+      result = [...result].sort(
+        (a, b) => +new Date(a.createdAt) - +new Date(b.createdAt),
+      );
+    } else if (sortBy === "az") {
+      result = [...result].sort((a, b) => a.title.localeCompare(b.title, "fa"));
+    }
+
+    return result;
+  }, [notes, query, sortBy]);
 
   function openCreateForm() {
     setEditingNote(null);
@@ -83,10 +110,24 @@ export default function HomePage() {
       </Header>
 
       <div className="p-6">
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          <SearchInput value={query} onChange={setQuery} />
+          <SortSelect value={sortBy} onChange={setSortBy} />
+        </div>
+
         {isloading && <p className="text-ink-soft">در حال بارگذاری...</p>}
         {error && <p className="text-danger">{error}</p>}
-        {!isloading && !error && (
-          <NoteGrid notes={notes} onDelete={setNoteIdToDelete} onEdit={openEditForm} />
+        {!isloading && !error && filteredNotes.length === 0 && query && (
+          <p className="text-ink-soft text-sm">
+            نتیجه‌ای برای «{query}» پیدا نشد.
+          </p>
+        )}
+        {!isloading && !error && filteredNotes.length > 0 && (
+          <NoteGrid
+            notes={filteredNotes}
+            onDelete={setNoteIdToDelete}
+            onEdit={openEditForm}
+          />
         )}
       </div>
 
@@ -106,7 +147,9 @@ export default function HomePage() {
         onCancel={() => setNoteIdToDelete(null)}
       />
 
-      {toast && <Toast message={toast.message} type={toast.type} onDone={clearToast} />}
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onDone={clearToast} />
+      )}
 
       <button
         onClick={openCreateForm}
