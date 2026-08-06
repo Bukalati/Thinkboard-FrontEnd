@@ -4,9 +4,12 @@ export const request = async <T>(
   url: string,
   init?: RequestInit,
 ): Promise<T> => {
-  const data = await fetch(`${BASE_URL}${url}`, init);
-  if (!data.ok) {
-    throw new Error("not ok");
+  const res = await fetch(`${BASE_URL}${url}`, init);
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => null);
+    throw new Error(
+      errorBody?.message ?? `درخواست ناموفق بود (کد ${res.status})`,
+    );
   }
-  return (await data.json()) as T;
+  return (await res.json()) as T;
 };
