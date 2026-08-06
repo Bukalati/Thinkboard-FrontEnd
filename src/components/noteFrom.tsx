@@ -20,10 +20,9 @@ export default function NoteForm({
     }
   }, [editingNote]);
 
-  //! ___ change it ________________________
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim() || !content.trim()) return;
 
     if (editingNote) {
       onUpdate(editingNote.id, { title, content });
