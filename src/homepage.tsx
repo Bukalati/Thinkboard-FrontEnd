@@ -14,6 +14,8 @@ import Toast from "./components/toast";
 import type { SortOption } from "./sortselect";
 import SearchInput from "./searchInput";
 import SortSelect from "./sortselect";
+import NoteGridSkeleton from "./components/notegridskeleton";
+import EmptyState from "./components/emptystate";
 
 export default function HomePage() {
   const { notes, isloading, error, refetch } = useGetAllNotes();
@@ -110,27 +112,34 @@ export default function HomePage() {
       </Header>
 
       <div className="p-6">
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <SearchInput value={query} onChange={setQuery} />
-          <SortSelect value={sortBy} onChange={setSortBy} />
-        </div>
-
-        {isloading && <p className="text-ink-soft">در حال بارگذاری...</p>}
+        {isloading && <NoteGridSkeleton />}
         {error && <p className="text-danger">{error}</p>}
-        {!isloading && !error && filteredNotes.length === 0 && query && (
-          <p className="text-ink-soft text-sm">
-            نتیجه‌ای برای «{query}» پیدا نشد.
-          </p>
+
+        {!isloading && !error && notes.length === 0 && (
+          <EmptyState onCreateNote={openCreateForm} />
         )}
-        {!isloading && !error && filteredNotes.length > 0 && (
-          <NoteGrid
-            notes={filteredNotes}
-            onDelete={setNoteIdToDelete}
-            onEdit={openEditForm}
-          />
+
+        {!isloading && !error && notes.length > 0 && (
+          <>
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+              <SearchInput value={query} onChange={setQuery} />
+              <SortSelect value={sortBy} onChange={setSortBy} />
+            </div>
+
+            {filteredNotes.length === 0 ? (
+              <p className="text-ink-soft text-sm">
+                نتیجه‌ای برای «{query}» پیدا نشد.
+              </p>
+            ) : (
+              <NoteGrid
+                notes={filteredNotes}
+                onDelete={setNoteIdToDelete}
+                onEdit={openEditForm}
+              />
+            )}
+          </>
         )}
       </div>
-
       <Modal isOpen={isFormOpen} onClose={closeForm}>
         <NoteForm
           editingNote={editingNote}
